@@ -1,0 +1,23 @@
+language: generic 
+sudo: required
+services:
+    -docker
+
+before_install:
+    - docker build -t harsh/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+    - docker run -e CI=true harsh/react-test npm test
+
+after_success:
+    - docker build -t harsh/multi-client ./client
+    - docker build -t harsh/multi-nginx ./nginx
+    - docker build -t harsh/multi-server ./server
+    - docker build -t harsh/multi-worker ./worker
+    # Log in to the docker CLI
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+    # Take those images and push them to docker hub
+    - docker push harsh/multi-client
+    - docker push harsh/multi-nginx
+    - docker push harsh/multi-server
+    - docker push harsh/multi-worker
