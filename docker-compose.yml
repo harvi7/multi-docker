@@ -26,7 +26,7 @@ services:
             - /app/node_modules
             - ./server:/app
         environment:
-            - REDIS_HOSt=redis
+            - REDIS_HOST=redis
             - REDIS_PORT=6739
             - PGUSER=postgres
             - PGHOST=postgres
